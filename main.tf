@@ -12,6 +12,24 @@ resource "azurerm_storage_account" "insecure_storage" {
   # Missing encryption settings
 }
 
+resource "azurerm_network_security_group" "insecure_nsg" {
+  name                = "insecure-nsg"
+  location            = "West Europe"
+  resource_group_name = "example-resources"
+
+  security_rule {
+    name                       = "allow-all"
+    priority                   = 100
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "*"
+    source_port_range          = "*"
+    destination_port_range     = "*"
+    source_address_prefix      = "*"
+    destination_address_prefix = "*"
+  }
+}
+
 
 # end
 #--------------------------------------------*--------------------------------------------
