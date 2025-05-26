@@ -30,6 +30,37 @@ resource "azurerm_network_security_group" "insecure_nsg" {
   }
 }
 
+resource "azurerm_virtual_machine" "insecure_vm" {
+  name                  = "insecure-vm"
+  location              = "West Europe"
+  resource_group_name   = "example-resources"
+  network_interface_ids = ["fake-nic-id"]
+  vm_size               = "Standard_DS1_v2"
+
+  storage_image_reference {
+    publisher = "Canonical"
+    offer     = "UbuntuServer"
+    sku       = "16.04-LTS"
+    version   = "latest"
+  }
+
+  storage_os_disk {
+    name              = "osdisk"
+    caching           = "ReadWrite"
+    create_option     = "FromImage"
+    managed_disk_type = "Standard_LRS"
+  }
+
+  os_profile {
+    computer_name  = "hostname"
+    admin_username = "adminuser"
+    admin_password = "Password1234!"  # Hardcoded password is a security issue
+  }
+  
+  os_profile_linux_config {
+    disable_password_authentication = false
+  }
+}
 
 # end
 #--------------------------------------------*--------------------------------------------
